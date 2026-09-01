@@ -69,7 +69,6 @@ visit_id = 10000
 for day_offset in range(NUM_DAYS):
     scheduled_date = (base_date + timedelta(days=day_offset)).strftime('%Y-%m-%d')
     
-    # Generate VISITS_PER_DAY visits spread across carers and service users
     for _ in range(VISITS_PER_DAY):
         service_user = random.choice(service_users)
         carer = random.choice(carers)
@@ -77,19 +76,18 @@ for day_offset in range(NUM_DAYS):
         scheduled_start = f"{random.randint(6, 16):02d}:{random.randint(0, 59):02d}"
         scheduled_duration = random.choice([30, 45, 60, 90])
         
-        # Simulate actual times (most visits complete, some late, some missed)
         completion_rand = random.random()
-        if completion_rand < 0.05:  # 5% missed visits
+        if completion_rand < 0.05:
             visit_completed = 0
             actual_arrival = None
             actual_departure = None
             late_minutes = None
-        elif completion_rand < 0.10:  # 5% late visits
+        elif completion_rand < 0.10:
             visit_completed = 1
             late_minutes = random.randint(5, 60)
             actual_arrival = (datetime.strptime(scheduled_start, '%H:%M') + timedelta(minutes=late_minutes)).strftime('%H:%M')
             actual_departure = (datetime.strptime(actual_arrival, '%H:%M') + timedelta(minutes=scheduled_duration)).strftime('%H:%M')
-        else:  # 90% on-time visits
+        else:
             visit_completed = 1
             late_minutes = 0
             actual_arrival = scheduled_start
@@ -120,7 +118,7 @@ print(f"   ✓ Created {len(visits)} visits")
 print("\n[4/7] Generating incidents...")
 incidents = []
 incident_id = 3000
-for visit in random.sample(visits, int(len(visits) * 0.08)):  # 8% of visits have incidents
+for visit in random.sample(visits, int(len(visits) * 0.08)):
     if visit['visit_completed'] == 0 or visit['visit_late_by_minutes'] and visit['visit_late_by_minutes'] > 30:
         incidents.append({
             'incident_id': incident_id,
@@ -172,7 +170,7 @@ roster_id = 5000
 
 for carer in carers:
     for day_offset in range(NUM_DAYS):
-        if random.random() > 0.15:  # 85% shift coverage
+        if random.random() > 0.15:
             shift_date = (base_date + timedelta(days=day_offset)).strftime('%Y-%m-%d')
             shift_start = f"{random.randint(6, 14):02d}:00"
             shift_end = f"{random.randint(14, 18):02d}:00"
@@ -205,4 +203,3 @@ print(f"  INVOICES:       {len(invoices):,} records")
 print(f"  STAFF_ROSTER:   {len(rosters):,} records")
 print(f"\n  Total records:  {len(service_users) + len(carers) + len(visits) + len(incidents) + len(invoices) + len(rosters):,}")
 print("\nAll CSV files saved to: data/synthetic/")
-print("=" * 70)
