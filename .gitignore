@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Synthetic CSVs: regenerate with scripts/generate_synthetic_data.py
+data/synthetic/
+
+# DuckDB scratch files (the database itself, db/careops.duckdb, is tracked)
+*.duckdb.wal
+*.duckdb.tmp
+db/*.tmp*
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
